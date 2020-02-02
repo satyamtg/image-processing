@@ -1,0 +1,5 @@
+package pgmutil
+
+func WritePlainPgm() {
+
+}
