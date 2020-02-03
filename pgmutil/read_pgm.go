@@ -3,14 +3,24 @@ package pgmutil
 import (
 	"fmt"
 	"io/ioutil"
-	"strings"
 	"strconv"
+	"strings"
 )
 
 func check(e error) {
 	if e != nil {
 		panic(e)
 	}
+}
+
+func removeComments(line string) string {
+	tempArr := strings.SplitN(line, "#", 2)
+	if len(tempArr) == 1 {
+		return line
+	} else {
+		return tempArr[0]
+	}
+
 }
 
 func readFile(filepath string) []string {
@@ -20,6 +30,7 @@ func readFile(filepath string) []string {
 	var dataArray []string
 	var lines = strings.Split(dataString, "\n")
 	for i := 0; i < len(lines); i++ {
+		lines[i] = removeComments(lines[i])
 		var tempArray = strings.Split(lines[i], " ")
 		for j := 0; j < len(tempArray); j++ {
 			if tempArray[j] != "" {
@@ -27,10 +38,10 @@ func readFile(filepath string) []string {
 			}
 		}
 	}
-	return(dataArray)
+	return (dataArray)
 }
 
-func readPlainPgm(fileTokens []string) (int, int, int, [][]int){
+func readPlainPgm(fileTokens []string) (int, int, int, [][]int) {
 	width, err := strconv.Atoi(fileTokens[0])
 	check(err)
 	height, err := strconv.Atoi(fileTokens[1])
@@ -38,9 +49,9 @@ func readPlainPgm(fileTokens []string) (int, int, int, [][]int){
 	maxVal, err := strconv.Atoi(fileTokens[2])
 	check(err)
 	pix := make([][]int, height)
-	for i, k := 0, 3; i<height; i++ {
+	for i, k := 0, 3; i < height; i++ {
 		pix[i] = make([]int, width)
-		for j := 0; j<width; j,k = j+1, k+1 {
+		for j := 0; j < width; j, k = j+1, k+1 {
 			data, err := strconv.Atoi(fileTokens[k])
 			check(err)
 			pix[i][j] = data
@@ -49,7 +60,7 @@ func readPlainPgm(fileTokens []string) (int, int, int, [][]int){
 	return width, height, maxVal, pix
 }
 
-func readExPgm(fileTokens []string) (int, int, int, [][]int){
+func readExPgm(fileTokens []string) (int, int, int, [][]int) {
 	fmt.Println("Will be implemented later")
 	width, err := strconv.Atoi(fileTokens[0])
 	check(err)
@@ -61,7 +72,7 @@ func readExPgm(fileTokens []string) (int, int, int, [][]int){
 	return width, height, maxVal, pix
 }
 
-func ReadPgm(filepath string) (int, int, int, [][]int){
+func ReadPgm(filepath string) (int, int, int, [][]int) {
 	fileTokensArray := readFile(filepath)
 	if fileTokensArray[0] == "P2" {
 		fileTokensArray = fileTokensArray[1:]
