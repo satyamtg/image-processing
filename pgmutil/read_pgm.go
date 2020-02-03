@@ -1,12 +1,20 @@
 package pgmutil
 
 import (
+	"bytes"
 	"fmt"
 	"io/ioutil"
 	"strconv"
 	"strings"
 )
 
+func normalizeNewlines(d []byte) []byte {
+	// replace CR LF \r\n (windows) with LF \n (unix)
+	d = bytes.Replace(d, []byte{13, 10}, []byte{10}, -1)
+	// replace CF \r (mac) with LF \n (unix)
+	d = bytes.Replace(d, []byte{13}, []byte{10}, -1)
+	return d
+}
 func check(e error) {
 	if e != nil {
 		panic(e)
@@ -26,6 +34,7 @@ func removeComments(line string) string {
 func readFile(filepath string) []string {
 	data, err := ioutil.ReadFile(filepath)
 	check(err)
+	data = normalizeNewlines(data)
 	var dataString = string(data)
 	var dataArray []string
 	var lines = strings.Split(dataString, "\n")
