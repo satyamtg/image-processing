@@ -1,10 +1,10 @@
-package main
+package imgalgo
 
 import (
 	"github.com/satyamtg/image-processing/pgmutil"
 )
 
-func FindOtsuThreshold(width int, height int, maxVal int, pix [][]int) int {
+func findOtsuThreshold(width int, height int, maxVal int, pix [][]int) int {
 	histogramCounts := make([]int, maxVal+1)
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
@@ -43,11 +43,9 @@ func FindOtsuThreshold(width int, height int, maxVal int, pix [][]int) int {
 	return threshold
 }
 
-func main() {
-	var pgmPath = "pgm_files/pbmlib.ascii.pgm"
-	var newFileName = "satyamtg.pgm"
+func BinarizeGlobalOtsu(pgmPath string, newFileName string) {
 	width, height, maxVal, pix := pgmutil.ReadPgm(pgmPath)
-	threshold := FindOtsuThreshold(width, height, maxVal, pix)
+	threshold := findOtsuThreshold(width, height, maxVal, pix)
 	for i := 0; i < height; i++ {
 		for j := 0; j < width; j++ {
 			if pix[i][j] >= threshold {
@@ -58,4 +56,14 @@ func main() {
 		}
 	}
 	pgmutil.WritePlainPgm(newFileName, pix, maxVal)
+}
+
+func BinarizeLocalOtsu(pgmPath string, newFileName string, radius int) {
+	width, height, maxVal, pix := pgmutil.ReadPgm(pgmPath)
+
+	for i := 0; i < height; i++ {
+		for j := 0; j < width; j++ {
+			//Find all pixel values around a pixel
+		}
+	}
 }
